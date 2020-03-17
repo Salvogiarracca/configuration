@@ -1,0 +1,78 @@
+#! /usr/bin/bash
+
+# -p update pacman
+# -c update cower
+# -m update mirrors
+
+# dependencies:
+# 	getopt
+# 	reflector
+
+LOG_PATH='/var/log/update-system/'
+
+PACMAN="sudo pacman -Syu"
+COWER="cower -dfu"
+MIRRORS="reflector --country Austria --country Belgium --country Bulgaria --country Croatia --country Czechia --country Denmark --country Finland --country France --country Germany --country Greece --country Hungary --country Ireland --country Italy --country Latvia --country Lithuania --country Luxembourg --country Netherlands --country Poland --country Portugal --country Romania --country Slovakia --country Slovenia --country Spain --country Sweden --country 'United Kingdom' --protocol http --protocol https --latest 200 --sort rate --number 50"
+
+update_pacman() {
+	echo "" | sudo tee -a $LOG_PATH"pacman.log" 1>/dev/null
+	echo "[$(date -Iseconds)]" | sudo tee -a $LOG_PATH"pacman.log" 1>/dev/null
+	$PACMAN 2>&1 | sudo tee -a $LOG_PATH"pacman.log"
+	echo ""
+}
+
+update_mirrorlist() {
+	echo "" | sudo tee -a $LOG_PATH"mirrorlist.log" 1>/dev/null
+	echo "[$(date -Iseconds)]" | sudo tee -a $LOG_PATH"mirrorlist.log" 1>/dev/null
+	sudo mv -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+	sudo reflector --country Austria --country Belgium --country Bulgaria --country Croatia --country Czechia --country Denmark --country Finland --country France --country Germany --country Greece --country Hungary --country Ireland --country Italy --country Latvia --country Lithuania --country Luxembourg --country Netherlands --country Poland --country Portugal --country Romania --country Slovakia --country Slovenia --country Spain --country Sweden --country 'United Kingdom' --protocol http --protocol https --latest 200 --sort rate --number 50 --save /etc/pacman.d/mirrorlist
+	cat /etc/pacman.d/mirrorlist | sudo tee -a $LOG_PATH"mirrorlist.log" 1>/dev/null
+	echo "Mirrorlist updated"
+	echo ""
+
+}
+
+
+ARG_P=0
+ARG_C=0
+ARG_M=0
+ARG_A=0
+
+# read the options
+TEMP=`getopt -o pcma -n 'update-system' -- "$@"`
+eval set -- "$TEMP"
+
+# extract options and their arguments into variables.
+while true ; do
+    case "$1" in
+		-p) ARG_P=1 ; shift ;;
+		-c) ARG_C=1 ; shift ;;
+		-m) ARG_M=1 ; shift ;;
+		-a) ARG_A=1 ; shift ;;
+        --) shift ; break ;;
+        *) echo "Internal error!" ; exit 1 ;;
+    esac
+done
+
+if [ $ARG_A -eq "1" ]; then
+	echo "Updating mirrors"
+	update_mirrorlist
+	echo "Updating pacman packages"
+	update_pacman
+	echo "Updating cower packages"
+	exit 0
+fi
+
+if [ $ARG_M -eq "1" ]; then
+	echo "Updating mirrors"
+	update_mirrorlist
+fi
+
+if [ $ARG_P -eq "1" ]; then
+	echo "Updating pacman packages"
+	update_pacman
+fi
+
+if [ $ARG_C -eq "1" ]; then
+	echo "Updating cower packages"
+fi

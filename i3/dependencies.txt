@@ -1,0 +1,18 @@
+/pasystray
+/nm-applet
+/blueman-applet (included ini blueman)
+/i3-py (from pip, to enable i3-swap-workspace-between-screens)
+/https://github.com/darddan/scrot (Modified version of scrot with blur and icon options) (For i3lock)
+xdotool (for i3-playpause-vlc and i3-close-focused-windows)
+i3blocks
+xautolock
+awesome-font in the ~/.fonts directory
+i3-lock
+i3-gasp
+background_changer (from my bitbucket repo) (Search backgrounds from dualmonitorbackgrounds.com and set it with feh)
+j4-dmenu-desktop (a faster version of i3-dmenu-desktop) (https://github.com/enkore/j4-dmenu-desktop) (Available in AUR)
+
+
+NOTE:
+if the dependence is preceded by /, it's not a critical dependence, but to make all works
+you'll need to change the setting/keybind about that dependence in the config file.

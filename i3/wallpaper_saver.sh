@@ -1,0 +1,1 @@
+wget -P ~/MEGACLOUD/Wallpapers/DualMonitor $(grep -oP "(?<=--no-xinerama "\'")\S+(?="\'")" ~/.fehbg) && notify-send -u normal "Background Saved" "Background saved in ~/MEGACLOUD/Wallpapers/DualMonitor"

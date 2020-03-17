@@ -1,0 +1,8 @@
+Xft.autohint:0
+Xft.antialias:1
+Xft.hinting:true
+Xft.rgba:rgb
+Xft.lcdfilter:lcddefault
+
+*.font: Anka/Coder:bold:pixelsize=13:antialias=true:autohint=true
+st.tabspaces:4
